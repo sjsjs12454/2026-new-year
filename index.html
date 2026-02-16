@@ -275,6 +275,7 @@
         }
 
         function addMessage() {
+            if (navigator.vibrate) navigator.vibrate(50); // 震动50毫秒
             playBlingSound();
             fireNativeConfetti();
             const w = document.getElementById('messages-wrapper');
@@ -296,3 +297,4 @@
     </script>
 </body>
 </html>
+
