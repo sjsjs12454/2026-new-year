@@ -232,15 +232,43 @@
         }
         shuffleArray(messages);
 
+        // --- 纯原生 Web Audio API 合成音效 (零延迟, 零网络请求) ---
+        function playBlingSound() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return; 
+            const ctx = new AudioContext();
+
+            // 制作一个类似超级马里奥“吃金币”的清脆双音调 (B5 -> E6)
+            const playNote = (freq, startTime, duration) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+                
+                // 设置音量衰减，形成清脆的打击感
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime + startTime); 
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + startTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime + startTime);
+                osc.stop(ctx.currentTime + startTime + duration);
+            };
+
+            // 连续播放两个音符，营造“叮-咚”的抽签感
+            playNote(987.77, 0, 0.3);    
+            playNote(1318.51, 0.08, 0.4); 
+        }
+
         // --- 手搓的原生 JS 礼花系统 ---
         function fireNativeConfetti() {
             const colors = ['#ffd700', '#ff0000', '#ffcc00', '#ffffff'];
-            // 生成 60 个碎片
             for (let i = 0; i < 60; i++) {
                 const confetti = document.createElement('div');
                 confetti.style.position = 'fixed';
                 confetti.style.left = '50%';
-                confetti.style.bottom = '25%'; // 从按钮大致位置喷射
+                confetti.style.bottom = '25%'; 
                 confetti.style.width = Math.random() * 8 + 6 + 'px';
                 confetti.style.height = Math.random() * 12 + 6 + 'px';
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
@@ -248,8 +276,7 @@
                 confetti.style.zIndex = '9999';
                 confetti.style.pointerEvents = 'none';
 
-                // 物理抛物线计算
-                const angle = Math.random() * Math.PI; // 向上的半圆角度
+                const angle = Math.random() * Math.PI; 
                 const velocity = 15 + Math.random() * 20;
                 const tx = Math.cos(angle) * velocity * 15;
                 const ty = -Math.sin(angle) * velocity * 15 - 100;
@@ -257,27 +284,28 @@
                 
                 document.body.appendChild(confetti);
 
-                // 使用原生 Web Animations API
                 confetti.animate([
                     { transform: 'translate(-50%, 0) rotate(0deg) scale(1)', opacity: 1 },
                     { transform: `translate(calc(-50% + ${tx}px), ${ty}px) rotate(${rot / 2}deg) scale(1.2)`, opacity: 1, offset: 0.7 },
                     { transform: `translate(calc(-50% + ${tx * 1.2}px), ${ty + 100}px) rotate(${rot}deg) scale(0.8)`, opacity: 0 }
                 ], {
                     duration: 1000 + Math.random() * 1000,
-                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 模拟重力减速
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     fill: 'forwards'
                 });
 
-                // 动画结束后清理 DOM 节点防止内存泄漏
                 setTimeout(() => confetti.remove(), 2000);
             }
         }
 
         function addMessage() {
-            // 直接调用我们的原生无依赖版礼花
+            // 1. 播放秒发声的物理合成器音效
+            playBlingSound();
+
+            // 2. 触发原生礼花特效
             fireNativeConfetti();
 
-            // 生成卡片
+            // 3. 生成卡片
             const wrapper = document.getElementById('messages-wrapper');
             const newCard = document.createElement('div');
             newCard.className = 'msg-card';
@@ -290,7 +318,6 @@
 
             wrapper.appendChild(newCard);
             
-            // 确保 DOM 渲染完再平滑滚动
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
