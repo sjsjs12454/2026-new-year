@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">2026 马年新春祝福</title>
+    <style>
+        /* --- 页面基础设置与图片背景 --- */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100vh;
+            background-image: url('bg.jpg');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #ffd700;
+            overflow: hidden;
+        }
+
+        /* --- 主内容区域 --- */
+        .main-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 60vh;
+            padding-bottom: 90px;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: fadeInDown 1s ease-out;
+            padding: 0 15px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        /* --- 交互按钮 --- */
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            color: #a60000;
+            background: linear-gradient(to bottom, #ffd700, #ffcc00);
+            border: 2px solid #fff;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 2px 3px rgba(255,255,255,0.6);
+            transition: all 0.2s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 8px 25px rgba(255, 215, 0, 0.9);
+            }
+
+            .btn:active {
+                transform: translateY(1px) scale(0.98);
+            }
+
+        /* --- 滚动与卡片 --- */
+        .messages-wrapper {
+            margin-top: 25px;
+            width: 90%;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+            .messages-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+
+        .msg-card {
+            background: rgba(80, 0, 0, 0.65);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: #fff;
+            font-size: 1.15rem;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            width: 85%;
+            line-height: 1.5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            opacity: 0;
+            transform: translateY(40px) scale(0.8);
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .highlight-name {
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 1.3rem;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            text-decoration-color: rgba(255, 215, 0, 0.6);
+        }
+
+        /* --- 底部工具栏 --- */
+        .share-box {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            align-items: center;
+            background: rgba(30, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
+
+        .share-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            width: 130px;
+            font-size: 1rem;
+            padding-left: 5px;
+        }
+
+            .share-input::placeholder {
+                color: #ffd700;
+                opacity: 0.7;
+            }
+
+        .share-btn {
+            background: linear-gradient(to bottom, #ffd700, #ffcc00);
+            color: #a60000;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-left: 10px;
+            font-size: 0.95rem;
+        }
+
+            .share-btn:hover {
+                transform: scale(1.05);
+                filter: brightness(1.1);
+            }
+
+        /* 动画定义 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popUp {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .main-container {
+                height: 65vh;
+                padding-bottom: 80px;
+            }
+
+            .msg-card {
+                font-size: 1.05rem;
+                width: 90%;
+                padding: 12px 18px;
+            }
+
+            .share-box {
+                bottom: 15px;
+                padding: 6px 12px;
+            }
+
+            .share-input {
+                width: 110px;
+                font-size: 0.95rem;
+            }
+
+            .share-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1 id="main-title">祝 <span class="highlight-name">朋友</span> 新春祈福</h1>
+        <button class="btn" onclick="addMessage()">点击抽取新年好运</button>
+        <div id="messages-wrapper" class="messages-wrapper"></div>
+    </div>
+
+    <div class="share-box">
+        <input type="text" id="friend-name" class="share-input" placeholder="输入朋友名字...">
+        <button class="share-btn" onclick="generateAndCopyLink()">复制专属链接</button>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetName = urlParams.get('name') || '朋友';
+
+        document.getElementById('page-title').textContent = `祝 ${targetName} 2026 马年新春快乐`;
+        document.getElementById('main-title').innerHTML = `祝 <span class="highlight-name">${targetName}</span> 新春祈福`;
+
+        // 全新扩充的、涵盖生活各方面的 18 条多维度祝福语库
+        const messages = [
+            `🐴 祝 ${targetName} 2026 马到成功，无论做什么都一马当先！`,
+            `💰 愿 ${targetName} 财运亨通，马上有钱，基金股票一路长虹！`,
+            `🚀 祝 ${targetName} 龙马精神，吃嘛嘛香，核心力量越来越强！`,
+            `✨ 新的一年，愿 ${targetName} 以梦为马，不负韶华，在热爱里闪闪发光！`,
+            `🎉 祝 ${targetName} 烦恼清零，快乐加倍，每天都有小确幸！`,
+            `🍊 愿 ${targetName} 大吉大利，锦鲤附体，出门就能捡到钱！`,
+            `🏆 祝 ${targetName} 逢考必过，Paper 顺利发表，各项比赛奖项拿到手软！`,
+            `🌸 愿 ${targetName} 桃花朵朵开，人见人爱，感情生活甜甜蜜蜜！`,
+            `🍎 祝 ${targetName} 平平安安，健健康康，百病不侵，活力满满每一天！`,
+            `🌈 新的一年，愿 ${targetName} 所求皆如愿，所行化坦途，多喜乐，长安宁！`,
+            `🍀 祝 ${targetName} 遇到困难总能逢凶化吉，贵人相助，一路开挂！`,
+            `🌟 愿 ${targetName} 每天都能睡到自然醒，没有 DDL 的烦恼，精神百倍！`,
+            `💼 祝 ${targetName} 升职加薪，Offer 拿到手软，职场一路绿灯！`,
+            `✈️ 愿 ${targetName} 新的一年有更多时间去旅行，看遍山川湖海，自由自在！`,
+            `🍰 祝 ${targetName} 狂吃不胖，奶茶自由，享受世间所有美食！`,
+            `👑 愿 ${targetName} 成为自己的主角，不被定义，活出最精彩的 2026！`,
+            `🎠 祝 ${targetName} 无论长多大，都能保留内心的童真，笑口常开！`,
+            `🎯 愿 ${targetName} 定下的 Flag 全都实现，执行力拉满，一气呵成！`
+        ];
+
+        let currentIndex = 0;
+
+        // 引入简单的洗牌算法，打乱祝福语顺序，让每个人点开看到的第一个祝福都不同
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        // 页面加载时打乱一次
+        shuffleArray(messages);
+
+        function addMessage() {
+            const wrapper = document.getElementById('messages-wrapper');
+            const newCard = document.createElement('div');
+            newCard.className = 'msg-card';
+            newCard.innerHTML = messages[currentIndex];
+            currentIndex = (currentIndex + 1) % messages.length;
+
+            // 如果一轮抽完了，再重新洗牌，保持新鲜感
+            if (currentIndex === 0) {
+                shuffleArray(messages);
+            }
+
+            wrapper.appendChild(newCard);
+            setTimeout(() => {
+                wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
+            }, 50);
+        }
+
+        function generateAndCopyLink() {
+            const inputElement = document.getElementById('friend-name');
+            const nameValue = inputElement.value.trim();
+            if (!nameValue) {
+                alert("请先输入朋友的名字哦！");
+                inputElement.focus();
+                return;
+            }
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = baseUrl + "?name=" + encodeURIComponent(nameValue);
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`✅ 专属链接已复制！\n快去粘贴发给 ${nameValue} 吧！`);
+                    inputElement.value = '';
+                }).catch(err => fallbackCopy(shareUrl));
+            } else {
+                fallbackCopy(shareUrl);
+            }
+        }
+
+        function fallbackCopy(text) {
+            prompt("由于浏览器权限限制，请手动复制以下链接：", text);
+            document.getElementById('friend-name').value = '';
+        }
+    </script>
+
+</body>
+</html>
