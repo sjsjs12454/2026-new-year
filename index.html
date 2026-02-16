@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">2026 马年新春祝福</title>
-  <script src="https://cdn.staticfile.net/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
     <style>
         /* --- 页面基础设置与图片背景 --- */
         body {
@@ -22,7 +21,6 @@
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             color: #ffd700;
             overflow: hidden;
-            /* 阻止移动端点击按钮时出现蓝色高亮半透明背景，提升手感 */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -61,7 +59,6 @@
             font-weight: bold;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 2px 3px rgba(255,255,255,0.6);
             transition: all 0.2s ease;
-            /* 防止按钮上的文字被长按选中 */
             user-select: none;
         }
 
@@ -166,7 +163,6 @@
             filter: brightness(1.1);
         }
 
-        /* 动画定义 */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -236,19 +232,50 @@
         }
         shuffleArray(messages);
 
-        function addMessage() {
-            // 移除导致卡顿的外链音频加载逻辑，直接触发礼花
-            
-            // 安全调用礼花特效，防止网络不佳时报错导致卡死
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 120,      
-                    spread: 80,              
-                    origin: { y: 0.7 },      
-                    colors: ['#ffd700', '#ff0000', '#ffcc00', '#ffffff'], 
-                    zIndex: 100              
+        // --- 手搓的原生 JS 礼花系统 ---
+        function fireNativeConfetti() {
+            const colors = ['#ffd700', '#ff0000', '#ffcc00', '#ffffff'];
+            // 生成 60 个碎片
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = '50%';
+                confetti.style.bottom = '25%'; // 从按钮大致位置喷射
+                confetti.style.width = Math.random() * 8 + 6 + 'px';
+                confetti.style.height = Math.random() * 12 + 6 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+
+                // 物理抛物线计算
+                const angle = Math.random() * Math.PI; // 向上的半圆角度
+                const velocity = 15 + Math.random() * 20;
+                const tx = Math.cos(angle) * velocity * 15;
+                const ty = -Math.sin(angle) * velocity * 15 - 100;
+                const rot = Math.random() * 720;
+                
+                document.body.appendChild(confetti);
+
+                // 使用原生 Web Animations API
+                confetti.animate([
+                    { transform: 'translate(-50%, 0) rotate(0deg) scale(1)', opacity: 1 },
+                    { transform: `translate(calc(-50% + ${tx}px), ${ty}px) rotate(${rot / 2}deg) scale(1.2)`, opacity: 1, offset: 0.7 },
+                    { transform: `translate(calc(-50% + ${tx * 1.2}px), ${ty + 100}px) rotate(${rot}deg) scale(0.8)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 模拟重力减速
+                    fill: 'forwards'
                 });
+
+                // 动画结束后清理 DOM 节点防止内存泄漏
+                setTimeout(() => confetti.remove(), 2000);
             }
+        }
+
+        function addMessage() {
+            // 直接调用我们的原生无依赖版礼花
+            fireNativeConfetti();
 
             // 生成卡片
             const wrapper = document.getElementById('messages-wrapper');
@@ -300,4 +327,3 @@
 
 </body>
 </html>
-
