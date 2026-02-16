@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">2026 马年新春祝福</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
     <style>
         /* --- 页面基础设置与图片背景 --- */
         body {
@@ -22,6 +22,8 @@
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             color: #ffd700;
             overflow: hidden;
+            /* 阻止移动端点击按钮时出现蓝色高亮半透明背景，提升手感 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* --- 主内容区域 --- */
@@ -59,6 +61,8 @@
             font-weight: bold;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 2px 3px rgba(255,255,255,0.6);
             transition: all 0.2s ease;
+            /* 防止按钮上的文字被长按选中 */
+            user-select: none;
         }
 
         .btn:hover {
@@ -232,22 +236,19 @@
         }
         shuffleArray(messages);
 
-        // 预加载提示音效
-        const popSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-
         function addMessage() {
-            // 播放音效
-            popSound.currentTime = 0;
-            popSound.play().catch(err => console.log("浏览器限制了自动播放", err));
-
-            // 触发红金专属撒花特效
-            confetti({
-                particleCount: 120,      
-                spread: 80,              
-                origin: { y: 0.7 },      
-                colors: ['#ffd700', '#ff0000', '#ffcc00', '#ffffff'], 
-                zIndex: 100              
-            });
+            // 移除导致卡顿的外链音频加载逻辑，直接触发礼花
+            
+            // 安全调用礼花特效，防止网络不佳时报错导致卡死
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,      
+                    spread: 80,              
+                    origin: { y: 0.7 },      
+                    colors: ['#ffd700', '#ff0000', '#ffcc00', '#ffffff'], 
+                    zIndex: 100              
+                });
+            }
 
             // 生成卡片
             const wrapper = document.getElementById('messages-wrapper');
@@ -261,9 +262,13 @@
             }
 
             wrapper.appendChild(newCard);
-            setTimeout(() => {
-                wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
-            }, 50);
+            
+            // 确保 DOM 渲染完再平滑滚动
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
+                }, 50);
+            });
         }
 
         function generateAndCopyLink() {
