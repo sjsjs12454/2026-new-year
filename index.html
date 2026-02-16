@@ -135,14 +135,9 @@
             border: none;
             color: #fff;
             outline: none;
-            width: 130px;
+            width: 120px;
             font-size: 1rem;
             padding-left: 5px;
-        }
-
-        .share-input::placeholder {
-            color: #ffd700;
-            opacity: 0.7;
         }
 
         .share-btn {
@@ -153,35 +148,44 @@
             padding: 8px 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
             margin-left: 10px;
             font-size: 0.95rem;
         }
 
-        .share-btn:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
+        /* --- BGM 切换按钮 --- */
+        #music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            cursor: pointer;
+            font-size: 20px;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popUp {
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        .spinning { animation: rotate 3s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popUp { to { opacity: 1; transform: translateY(0) scale(1); } }
 
         @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
-            .main-container { height: 65vh; padding-bottom: 80px; }
-            .msg-card { font-size: 1.05rem; width: 90%; padding: 12px 18px;}
-            .share-box { bottom: 15px; padding: 6px 12px;}
-            .share-input { width: 110px; font-size: 0.95rem; }
-            .share-btn { padding: 6px 12px; font-size: 0.85rem; }
+            .main-container { height: 65vh; }
         }
     </style>
 </head>
 <body>
+
+    <div id="music-toggle" onclick="toggleBGM()">🎵</div>
 
     <div class="main-container">
         <h1 id="main-title">祝 <span class="highlight-name">朋友</span> 新春祈福</h1>
@@ -190,167 +194,91 @@
     </div>
 
     <div class="share-box">
-        <input type="text" id="friend-name" class="share-input" placeholder="输入朋友名字...">
+        <input type="text" id="friend-name" class="share-input" placeholder="输入名字...">
         <button class="share-btn" onclick="generateAndCopyLink()">复制专属链接</button>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const targetName = urlParams.get('name') || '朋友';
-
-        document.getElementById('page-title').textContent = `祝 ${targetName} 2026 马年新春快乐`;
         document.getElementById('main-title').innerHTML = `祝 <span class="highlight-name">${targetName}</span> 新春祈福`;
 
-        const messages = [
-            `🐴 祝 ${targetName} 2026 马到成功，无论做什么都一马当先！`,
-            `💰 愿 ${targetName} 财运亨通，马上有钱，基金股票一路长虹！`,
-            `🚀 祝 ${targetName} 龙马精神，吃嘛嘛香，核心力量越来越强！`,
-            `✨ 新的一年，愿 ${targetName} 以梦为马，不负韶华，在热爱里闪闪发光！`,
-            `🎉 祝 ${targetName} 烦恼清零，快乐加倍，每天都有小确幸！`,
-            `🍊 愿 ${targetName} 大吉大利，锦鲤附体，出门就能捡到钱！`,
-            `🏆 祝 ${targetName} 逢考必过，Paper 顺利发表，各项比赛奖项拿到手软！`,
-            `🌸 愿 ${targetName} 桃花朵朵开，人见人爱，感情生活甜甜蜜蜜！`,
-            `🍎 祝 ${targetName} 平平安安，健健康康，百病不侵，活力满满每一天！`,
-            `🌈 新的一年，愿 ${targetName} 所求皆如愿，所行化坦途，多喜乐，长安宁！`,
-            `🍀 祝 ${targetName} 遇到困难总能逢凶化吉，贵人相助，一路开挂！`,
-            `🌟 愿 ${targetName} 每天都能睡到自然醒，没有 DDL 的烦恼，精神百倍！`,
-            `💼 祝 ${targetName} 升职加薪，Offer 拿到手软，职场一路绿灯！`,
-            `✈️ 愿 ${targetName} 新的一年有更多时间去旅行，看遍山川湖海，自由自在！`,
-            `🍰 祝 ${targetName} 狂吃不胖，奶茶自由，享受世间所有美食！`,
-            `👑 愿 ${targetName} 成为自己的主角，不被定义，活出最精彩的 2026！`,
-            `🎠 祝 ${targetName} 无论长多大，都能保留内心的童真，笑口常开！`,
-            `🎯 愿 ${targetName} 定下的 Flag 全都实现，执行力拉满，一气呵成！`
-        ];
-        
+        const messages = [`🐴 祝 ${targetName} 2026 马到成功！`,`💰 愿 ${targetName} 财运亨通，马上有钱！`,`🚀 祝 ${targetName} 龙马精神，核心力量越来越强！`,`✨ 新的一年，愿 ${targetName} 以梦为马，不负韶华！`,`🎉 祝 ${targetName} 烦恼清零，快乐加倍！`,`🍊 愿 ${targetName} 大吉大利，出门就能捡到钱！`,`🏆 祝 ${targetName} 逢考必过，各项比赛奖项拿到手软！`,`🌸 愿 ${targetName} 桃花朵朵开，感情生活甜甜蜜蜜！`,`🍎 祝 ${targetName} 健健康康，活力满满每一天！`,`🌈 愿 ${targetName} 多喜乐，长安宁！`];
         let currentIndex = 0;
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+        function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
         shuffleArray(messages);
 
-        // --- 纯原生 Web Audio API 合成音效 (零延迟, 零网络请求) ---
-        function playBlingSound() {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return; 
-            const ctx = new AudioContext();
+        // --- BGM & 音效管理 ---
+        const bgm = new Audio('https://api.uomg.com/api/rand.music?sort=热歌榜&format=mp3'); // 演示用，实际建议换成固定连接
+        bgm.loop = true;
+        let isMusicPlaying = false;
+        let audioCtx = null;
 
-            // 制作一个类似超级马里奥“吃金币”的清脆双音调 (B5 -> E6)
-            const playNote = (freq, startTime, duration) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
-                
-                // 设置音量衰减，形成清脆的打击感
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime + startTime); 
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + startTime + duration);
-                
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(ctx.currentTime + startTime);
-                osc.stop(ctx.currentTime + startTime + duration);
-            };
-
-            // 连续播放两个音符，营造“叮-咚”的抽签感
-            playNote(987.77, 0, 0.3);    
-            playNote(1318.51, 0.08, 0.4); 
+        function toggleBGM() {
+            const btn = document.getElementById('music-toggle');
+            if (isMusicPlaying) {
+                bgm.pause();
+                btn.classList.remove('spinning');
+            } else {
+                bgm.play();
+                btn.classList.add('spinning');
+            }
+            isMusicPlaying = !isMusicPlaying;
         }
 
-        // --- 手搓的原生 JS 礼花系统 ---
+        function playBlingSound() {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return; 
+            if (!audioCtx) audioCtx = new AC();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const play = (f, s, d) => {
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(f, audioCtx.currentTime + s);
+                g.gain.setValueAtTime(0, audioCtx.currentTime);
+                g.gain.setValueAtTime(0.3, audioCtx.currentTime + s); 
+                g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + s + d);
+                o.connect(g); g.connect(audioCtx.destination);
+                o.start(audioCtx.currentTime + s); o.stop(audioCtx.currentTime + s + d);
+            };
+            play(987, 0, 0.3); play(1318, 0.08, 0.4); 
+        }
+
+        // --- 原生礼花特效 ---
         function fireNativeConfetti() {
             const colors = ['#ffd700', '#ff0000', '#ffcc00', '#ffffff'];
             for (let i = 0; i < 60; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.left = '50%';
-                confetti.style.bottom = '25%'; 
-                confetti.style.width = Math.random() * 8 + 6 + 'px';
-                confetti.style.height = Math.random() * 12 + 6 + 'px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                confetti.style.zIndex = '9999';
-                confetti.style.pointerEvents = 'none';
-
-                const angle = Math.random() * Math.PI; 
-                const velocity = 15 + Math.random() * 20;
-                const tx = Math.cos(angle) * velocity * 15;
-                const ty = -Math.sin(angle) * velocity * 15 - 100;
-                const rot = Math.random() * 720;
-                
-                document.body.appendChild(confetti);
-
-                confetti.animate([
-                    { transform: 'translate(-50%, 0) rotate(0deg) scale(1)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${tx}px), ${ty}px) rotate(${rot / 2}deg) scale(1.2)`, opacity: 1, offset: 0.7 },
-                    { transform: `translate(calc(-50% + ${tx * 1.2}px), ${ty + 100}px) rotate(${rot}deg) scale(0.8)`, opacity: 0 }
-                ], {
-                    duration: 1000 + Math.random() * 1000,
-                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                    fill: 'forwards'
-                });
-
-                setTimeout(() => confetti.remove(), 2000);
+                const c = document.createElement('div');
+                c.style.cssText = `position:fixed;left:50%;bottom:25%;width:${Math.random()*8+6}px;height:${Math.random()*12+6}px;background:${colors[Math.floor(Math.random()*colors.length)]};z-index:9999;pointer-events:none;`;
+                const a = Math.random()*Math.PI, v = 15+Math.random()*20, tx = Math.cos(a)*v*15, ty = -Math.sin(a)*v*15-100, r = Math.random()*720;
+                document.body.appendChild(c);
+                c.animate([{transform:'translate(-50%,0) rotate(0deg) scale(1)',opacity:1},{transform:`translate(calc(-50% + ${tx}px),${ty}px) rotate(${r/2}deg) scale(1.2)`,opacity:1,offset:0.7},{transform:`translate(calc(-50% + ${tx*1.2}px),${ty+100}px) rotate(${r}deg) scale(0.8)`,opacity:0}],{duration:1000+Math.random()*1000,easing:'cubic-bezier(0.25,0.46,0.45,0.94)',fill:'forwards'});
+                setTimeout(()=>c.remove(), 2000);
             }
         }
 
         function addMessage() {
-            // 1. 播放秒发声的物理合成器音效
+            // 用户点击时启动音乐 (符合浏览器安全策略)
+            if(!isMusicPlaying) toggleBGM();
             playBlingSound();
-
-            // 2. 触发原生礼花特效
             fireNativeConfetti();
-
-            // 3. 生成卡片
-            const wrapper = document.getElementById('messages-wrapper');
-            const newCard = document.createElement('div');
-            newCard.className = 'msg-card';
-            newCard.innerHTML = messages[currentIndex];
+            const w = document.getElementById('messages-wrapper');
+            const n = document.createElement('div');
+            n.className = 'msg-card';
+            n.innerHTML = messages[currentIndex];
             currentIndex = (currentIndex + 1) % messages.length;
-            
-            if (currentIndex === 0) {
-                shuffleArray(messages);
-            }
-
-            wrapper.appendChild(newCard);
-            
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
-                }, 50);
-            });
+            if (currentIndex === 0) shuffleArray(messages);
+            w.appendChild(n);
+            requestAnimationFrame(()=>setTimeout(()=>w.scrollTo({top:w.scrollHeight,behavior:'smooth'}), 50));
         }
 
         function generateAndCopyLink() {
-            const inputElement = document.getElementById('friend-name');
-            const nameValue = inputElement.value.trim();
-            if (!nameValue) {
-                alert("请先输入朋友的名字哦！");
-                inputElement.focus();
-                return;
-            }
-            const baseUrl = window.location.origin + window.location.pathname;
-            const shareUrl = baseUrl + "?name=" + encodeURIComponent(nameValue);
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(shareUrl).then(() => {
-                    alert(`✅ 专属链接已复制！\n快去粘贴发给 ${nameValue} 吧！`);
-                    inputElement.value = '';
-                }).catch(err => fallbackCopy(shareUrl));
-            } else {
-                fallbackCopy(shareUrl);
-            }
-        }
-
-        function fallbackCopy(text) {
-            prompt("由于浏览器权限限制，请手动复制以下链接：", text);
-            document.getElementById('friend-name').value = '';
+            const n = document.getElementById('friend-name').value.trim();
+            if(!n) return alert("输入名字哦！");
+            const url = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(n);
+            navigator.clipboard ? navigator.clipboard.writeText(url).then(()=>alert("✅ 专属链接已复制！")) : prompt("复制链接：", url);
         }
     </script>
-
 </body>
 </html>
