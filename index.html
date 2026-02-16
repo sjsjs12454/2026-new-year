@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">2026 马年新春祝福</title>
     <style>
-        /* --- 页面基础设置与图片背景 --- */
+        /* --- 1. 基础样式与背景 --- */
         body {
             margin: 0;
             padding: 0;
@@ -24,7 +24,58 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- 主内容区域 --- */
+        /* --- 2. 进场动画蒙层 --- */
+        #entrance-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, #ff4d4d, #b30000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .overlay-content { text-align: center; color: #ffd700; }
+
+        .fuzi {
+            font-size: 80px;
+            background: #ffd700;
+            color: #a60000;
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            transform: rotate(-15deg);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .enter-circle {
+            width: 100px;
+            height: 100px;
+            background: #ffd700;
+            color: #a60000;
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 100px;
+            border-radius: 50%;
+            margin: 30px auto;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transition: transform 0.3s;
+        }
+
+        .hide-overlay { opacity: 0; pointer-events: none; transform: scale(1.2); }
+
+        @keyframes pulse { 
+            0%, 100% { transform: rotate(-15deg) scale(1); } 
+            50% { transform: rotate(-15deg) scale(1.1); } 
+        }
+
+        /* --- 3. 主内容区域 --- */
         .main-container {
             text-align: center;
             width: 100%;
@@ -37,28 +88,19 @@
             z-index: 10;
         }
 
-        /* 标题样式：控制整体字体 */
         h1 {
             font-size: 2.8rem;
             margin-bottom: 20px;
-            /* 强化阴影，确保在砖墙背景上文字醒目 */
             text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(255, 215, 0, 0.6);
-            animation: fadeInDown 1s ease-out;
             padding: 0 15px;
             font-weight: 800;
             letter-spacing: 2px;
             line-height: 1.3;
         }
 
-        /* 名字样式：现在与标题完全一致 */
-        .highlight-name {
-            font-weight: inherit;
-            font-size: inherit;
-            color: inherit;
-            text-decoration: none;
-        }
+        /* 统一标题与名字字体 */
+        .highlight-name { font-weight: inherit; font-size: inherit; color: inherit; }
 
-        /* --- 交互按钮 --- */
         .btn {
             padding: 15px 40px;
             font-size: 1.3rem;
@@ -73,16 +115,7 @@
             user-select: none;
         }
 
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.9);
-        }
-
-        .btn:active {
-            transform: translateY(1px) scale(0.98);
-        }
-
-        /* --- 滚动与卡片 --- */
+        /* --- 4. 祝福卡片与工具栏 --- */
         .messages-wrapper {
             margin-top: 25px;
             width: 90%;
@@ -93,7 +126,6 @@
             align-items: center;
             padding-bottom: 20px;
             scrollbar-width: none; 
-            -ms-overflow-style: none;
         }
         .messages-wrapper::-webkit-scrollbar { display: none; }
 
@@ -106,17 +138,11 @@
             margin-bottom: 12px;
             border-radius: 12px;
             width: 85%;
-            line-height: 1.5;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-            opacity: 0;
-            transform: translateY(40px) scale(0.8);
             animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
             backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
         }
 
-        /* --- 底部工具栏 --- */
         .share-box {
             position: fixed;
             bottom: 20px;
@@ -124,73 +150,34 @@
             align-items: center;
             background: rgba(30, 0, 0, 0.75);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             padding: 8px 15px;
             border-radius: 30px;
             border: 1px solid rgba(255, 215, 0, 0.4);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
             z-index: 100;
         }
 
-        .share-input {
-            background: transparent;
-            border: none;
-            color: #fff;
-            outline: none;
-            width: 120px;
-            font-size: 1rem;
-            padding-left: 5px;
-        }
+        .share-input { background: transparent; border: none; color: #fff; outline: none; width: 120px; font-size: 1rem; }
+        .share-btn { background: linear-gradient(to bottom, #ffd700, #ffcc00); color: #a60000; border: none; border-radius: 20px; padding: 8px 16px; font-weight: bold; cursor: pointer; margin-left: 10px; font-size: 0.95rem; }
 
-        .share-input::placeholder {
-            color: #ffd700;
-            opacity: 0.7;
-        }
-
-        .share-btn {
-            background: linear-gradient(to bottom, #ffd700, #ffcc00);
-            color: #a60000;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 0.95rem;
-        }
-
-        /* --- BGM 切换按钮 --- */
-        #music-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            border: 1px solid #ffd700;
-            color: #ffd700;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
+        /* BGM 控制 */
+        #music-toggle { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1000; border: 1px solid #ffd700; color: #ffd700; cursor: pointer; }
         .spinning { animation: rotate 3s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes popUp { from { opacity: 0; transform: translateY(40px) scale(0.8); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popUp { to { opacity: 1; transform: translateY(0) scale(1); } }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            .main-container { height: 65vh; }
-        }
+        @media (max-width: 600px) { h1 { font-size: 2.2rem; } .main-container { height: 65vh; } }
     </style>
 </head>
 <body>
+
+    <div id="entrance-overlay">
+        <div class="overlay-content">
+            <div class="fuzi">福</div>
+            <h2 style="font-size: 24px;">2026 马年大吉</h2>
+            <p style="opacity: 0.8;">点击开启专属祝福</p>
+            <div class="enter-circle" onclick="enterSite()">開</div>
+        </div>
+    </div>
 
     <div id="music-toggle" onclick="toggleBGM()">🎵</div>
 
@@ -227,6 +214,7 @@
             `✈️ 愿 ${targetName} 新的一年有更多时间去旅行，看遍山川湖海，自由自在！`,
             `🍰 祝 ${targetName} 狂吃不胖，奶茶自由，享受世间所有美食！`,
             `👑 愿 ${targetName} 成为自己的主角，不被定义，活出最精彩的 2026！`,
+            `🎠 祝 ${targetName} 无论长多大，都能保留内心的童真，笑口常开！`,
             `🎯 愿 ${targetName} 定下的 Flag 全都实现，执行力拉满，一气呵成！`
         ];
         
@@ -234,21 +222,16 @@
         function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
         shuffleArray(messages);
 
-        // --- BGM & 音效管理 (Singleton Context) ---
- const bgm = new Audio('gongxi.mp3');
+        // --- BGM & 音效管理 ---
+        const bgm = new Audio('gongxi.mp3'); 
         bgm.loop = true;
         let isMusicPlaying = false;
         let audioCtx = null;
 
         function toggleBGM() {
             const btn = document.getElementById('music-toggle');
-            if (isMusicPlaying) {
-                bgm.pause();
-                btn.classList.remove('spinning');
-            } else {
-                bgm.play().catch(() => console.log("等待交互触发"));
-                btn.classList.add('spinning');
-            }
+            if (isMusicPlaying) { bgm.pause(); btn.classList.remove('spinning'); } 
+            else { bgm.play().catch(e=>console.log("音频加载中")); btn.classList.add('spinning'); }
             isMusicPlaying = !isMusicPlaying;
         }
 
@@ -258,10 +241,8 @@
             if (!audioCtx) audioCtx = new AC();
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const play = (f, s, d) => {
-                const o = audioCtx.createOscillator();
-                const g = audioCtx.createGain();
-                o.type = 'sine';
-                o.frequency.setValueAtTime(f, audioCtx.currentTime + s);
+                const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                o.type = 'sine'; o.frequency.setValueAtTime(f, audioCtx.currentTime + s);
                 g.gain.setValueAtTime(0, audioCtx.currentTime);
                 g.gain.setValueAtTime(0.3, audioCtx.currentTime + s); 
                 g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + s + d);
@@ -284,8 +265,16 @@
             }
         }
 
+        // --- 核心逻辑 ---
+        function enterSite() {
+            document.getElementById('entrance-overlay').classList.add('hide-overlay');
+            setTimeout(() => {
+                if(!isMusicPlaying) toggleBGM();
+                fireNativeConfetti();
+            }, 400);
+        }
+
         function addMessage() {
-            if(!isMusicPlaying) toggleBGM();
             playBlingSound();
             fireNativeConfetti();
             const w = document.getElementById('messages-wrapper');
@@ -302,13 +291,8 @@
             const n = document.getElementById('friend-name').value.trim();
             if(!n) return alert("输入名字哦！");
             const url = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(n);
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(()=>alert("✅ 专属链接已复制！"));
-            } else {
-                prompt("复制链接：", url);
-            }
+            navigator.clipboard ? navigator.clipboard.writeText(url).then(()=>alert("✅ 专属链接已复制！")) : prompt("复制链接：", url);
         }
     </script>
 </body>
 </html>
-
